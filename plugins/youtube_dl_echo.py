@@ -38,6 +38,7 @@ from plugins.spankbang_engine import is_spankbang as _sb_is, extract_video_info 
 from plugins.wowxxx_engine import is_wowxxx as _wx_is, extract_video_info as wowxxx_extract
 from plugins.xhand_engine import is_xhand as _xh2_is, extract_video_info as xhand_extract
 from plugins.bang_engine import is_bang as _bg_is, extract_video_info as bang_extract
+from plugins.jav_engine import is_jav as _jav_is, extract_video_info as jav_extract
 from plugins.stickers import send_sticker as _send_sticker
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
@@ -127,6 +128,10 @@ def is_xhand(url: str) -> bool:
 
 def is_bang(url: str) -> bool:
     return _bg_is(url)
+
+
+def is_jav(url: str) -> bool:
+    return _jav_is(url)
 
 
 def build_terabox_keyboard(tb_info, task_id=""):
@@ -706,6 +711,8 @@ async def echo(bot, update):
             "porn", "sex", "xxx", "fuck", "milf", "anal", "hentai", "adult",
             "camgirl", "nsfw", "cunt", "boobs", "nude", "18", "hqporner",
             "txxx", "hclips", "upornia", "hotmovs", "wankoz", "qorno",
+            "missav", "jable", "javguru", "javbus", "javdb", "njav", "123av",
+            "supjav", "netflav", "thisav", "hpjav", "javmost", "javgg",
         )
         _low = (url or "").lower()
         if any(k in _low for k in _adult_kw):
@@ -1443,12 +1450,55 @@ async def echo(bot, update):
             logger.error(f"Bang engine error: {e}")
 
     # ============================================================
+    #  JAV hosts (MissAV / Jable / 123AV / NJAV / mirrors)
+    #  HLS-native download — preview clips skip, actual video file.
+    # ============================================================
+    if is_jav(url):
+        try:
+            jav_info = await asyncio.to_thread(jav_extract, url)
+            if jav_info and jav_info.get("qualities"):
+                logger.info("jav custom engine OK: %s qualities=%s", url, [q.get("height") for q in jav_info.get("qualities", [])])
+                jav_json = {
+                    "title": jav_info.get("title") or "JAV Video",
+                    "fulltitle": jav_info.get("title") or "JAV Video",
+                    "duration": jav_info.get("duration"),
+                    "_jav": True,
+                    "jav_qualities": {str(q["height"]): q["url"] for q in jav_info["qualities"]},
+                    "jav_headers": jav_info.get("headers") or {},
+                }
+                os.makedirs(Config.BIMBO_DOWNLOAD_LOCATION, exist_ok=True)
+                task_id = generate_task_id(update.from_user.id)
+                save_ytdl_json_path = os.path.join(
+                    Config.BIMBO_DOWNLOAD_LOCATION, f"{update.from_user.id}_{task_id}.json")
+                with open(save_ytdl_json_path, "w", encoding="utf8") as outfile:
+                    json.dump(jav_json, outfile, ensure_ascii=False)
+                reply_markup = build_generic_engine_keyboard(jav_info, task_id, "jav", "JAV")
+                await imog.delete(True)
+                thumb_url = jav_info.get("thumbnail") or jav_info.get("thumb")
+                await send_buttons_with_thumbnail(
+                    bot=bot,
+                    chat_id=update.chat.id,
+                    text=(
+                        f"<b>🎯 JAV video detected</b>\n\n"
+                        f"<b>📹 Title:</b> {escape_html((jav_info.get('title') or 'Video')[:100])}\n\n"
+                        "Choose quality:"
+                    ),
+                    reply_markup=reply_markup,
+                    thumb_url=thumb_url,
+                    reply_to_message_id=update.id,
+                    referer=url,
+                )
+                return
+        except Exception as e:
+            logger.error(f"JAV engine error: {e}")
+
+    # ============================================================
     #  UNIVERSAL Extractor (koi bhi website) — SCRAPE-FIRST fallback
     #  Kisi dedicated engine se match nahi hua -> page se seedha
     #  video (.mp4/.m3u8/og:video/iframe) nikaalne ki koshish karo.
     #  Mile to generic keyboard dikhao; na mile to niche yt-dlp try hoga.
     # ============================================================
-    if _uni_ok(url):
+    if _uni_ok(url) and not is_jav(url):
         try:
             uni_info = await asyncio.to_thread(universal_extract, url)
             if uni_info and uni_info.get("qualities"):
@@ -1564,6 +1614,7 @@ async def echo(bot, update):
                 "• Wow.xxx\n"
                 "• Xhand\n"
                 "• Bang.com\n"
+                "• MissAV / Jable / 123AV / NJAV (JAV)\n"
                 "• Instagram\n"
                 "• Twitter\n"
                 "• Facebook\n"

@@ -1058,6 +1058,48 @@ async def youtube_dl_call_back(bot, update, priority=100):
             hdr_args += ["--add-header", f"Referer:{ref}"]
         
         command_to_exec = common_ytdlp_args + hdr_args + ["-o", download_directory, video_url]
+
+    # JAV Handler (MissAV / Jable / 123AV HLS — native downloader, not aria2)
+    elif response_json.get("_jav") and youtube_dl_format.startswith("jav-"):
+        jav_qualities = response_json.get("jav_qualities") or {}
+        jav_headers = response_json.get("jav_headers") or {}
+        try:
+            _h = int(youtube_dl_format.split("-", 1)[1])
+        except Exception:
+            _h = 720
+        video_url = jav_qualities.get(str(_h))
+        if not video_url:
+            avail = sorted((int(k) for k in jav_qualities.keys()))
+            pick = min(avail, key=lambda x: abs(x - _h)) if avail else None
+            video_url = jav_qualities.get(str(pick)) if pick else None
+
+        if not video_url:
+            await safe_edit(update.message, "ERROR: JAV quality URL not found 🙁")
+            asyncio.create_task(clendir(tmp_directory_for_each_user))
+            return
+
+        hdr_args = []
+        ref = jav_headers.get("Referer")
+        org = jav_headers.get("Origin")
+        if ref:
+            hdr_args += ["--add-header", f"Referer:{ref}"]
+        if org:
+            hdr_args += ["--add-header", f"Origin:{org}"]
+
+        low = (video_url or "").lower()
+        is_hls = ".m3u8" in low
+        if is_hls:
+            command_to_exec = common_ytdlp_args + hdr_args + [
+                "--hls-use-mpegts",
+                "--hls-prefer-native",
+                "-N", "4",
+                "--merge-output-format", "mp4",
+                "-o", download_directory, video_url,
+            ]
+        else:
+            command_to_exec = common_ytdlp_args + hdr_args + [
+                "--force-generic-extractor", "-o", download_directory, video_url,
+            ]
     
     elif tg_send_type == "audio":
         command_to_exec = common_ytdlp_args + [
@@ -1112,11 +1154,12 @@ async def youtube_dl_call_back(bot, update, priority=100):
         # ka native downloader use hoga jo redirect+range sahi handle karta hai.
         is_sxy_engine = bool(response_json.get("_sxyprn")) if isinstance(response_json, dict) else False
         is_uni_engine = bool(response_json.get("_universal")) if isinstance(response_json, dict) else False
+        is_jav_engine = bool(response_json.get("_jav")) if isinstance(response_json, dict) else False
         # For direct CDN links (like pvvstream pro etc.), add Referer to bypass hotlink
-        # IMPORTANT: skip for custom engines (xh, ep, sxyprn, universal) — their CDN
-        # URLs have signed tokens / redirects that break with aria2 external downloader.
+        # IMPORTANT: skip for custom engines (xh, ep, sxyprn, universal, jav) — their CDN
+        # URLs have signed tokens / HLS that break with aria2 external downloader.
         if (not is_fragment_stream and not is_xh_engine and not is_ep_engine
-                and not is_sxy_engine and not is_uni_engine):
+                and not is_sxy_engine and not is_uni_engine and not is_jav_engine):
             command_to_exec.extend([
                 "--downloader", "aria2c",
                 "--downloader-args", (
