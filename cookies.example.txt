@@ -1,0 +1,9 @@
+# Netscape HTTP Cookie File
+#
+# Keep the real file private as cookies.txt. Never commit browser cookies.
+# Public xHamster videos are intentionally fetched without cookies first.
+# For a login/age-gated video, provide a current xHamster-only cookies.txt and
+# set XHAMSTER_USE_COOKIES=true. Do not export unrelated Google/ad cookies.
+#
+# Example format (placeholder values only):
+# .example.com	TRUE	/	TRUE	0	cookie_name	REPLACE_ME

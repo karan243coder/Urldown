@@ -1,0 +1,18 @@
+XHAMSTER FIX v7 - cookies support stronger
+
+User ne xHamster cookies diye.
+Important: cookies.txt me domain plain hona chahiye:
+.xhamster46.desi
+not markdown like .[xhamster46.desi](http://xhamster46.desi)
+
+v7 changes:
+1) cookies.txt parser robust banaya.
+2) Agar domain markdown/broken ho to clean karne ki koshish karega.
+3) requests cookies dict ke saath Cookie header bhi bhejega.
+4) Log me cookies loaded count dikhega.
+
+Replace:
+plugins/xhamster_engine.py
+plugins/youtube_dl_echo.py
+
+Also ensure cookies.txt root folder me ho (same level as bot.py).

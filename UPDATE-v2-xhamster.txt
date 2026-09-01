@@ -1,0 +1,14 @@
+XHAMSTER FIX v2
+
+Is v2 me 3 extra safety changes hain:
+1) Quality message me "xHamster custom engine active" dikhega, taaki confirm ho engine chal raha hai.
+2) Direct m3u8 custom engine fail ho to button handler automatically yt-dlp h264-HLS fallback try karega.
+3) Referer header ab exact page URL se jayega (CDN ke liye safer).
+
+Deploy:
+- Zip extract karo
+- GitHub repo me files replace/upload karo
+- Koyeb me Redeploy
+- xHamster link bhejo
+- Agar quality buttons me "xHamster custom engine active" dikhe to engine path OK hai
+- Agar still fail ho, bot ke ERROR message ki full copy bhejo

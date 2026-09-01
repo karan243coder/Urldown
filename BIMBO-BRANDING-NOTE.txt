@@ -1,0 +1,6 @@
+BIMBO branding patch applied.
+
+Important:
+- BIMBO_* variable names are NOT renamed because they are used by config/env and changing them can break the bot.
+- Visible credits/comments/README/session display were changed to BIMBO.
+- xHamster engine and working download logic are untouched except existing fixes.

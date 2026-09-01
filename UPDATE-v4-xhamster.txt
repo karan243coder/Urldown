@@ -1,0 +1,16 @@
+XHAMSTER FIX v4
+
+Koyeb log me mila:
+xhamster: no m3u8 found; status=200 html_len=67173 has_initials=True
+
+Iska matlab page aa raha hai aur window.initials bhi hai, lekin old regex JSON ko theek se parse nahi kar pa raha tha.
+
+v4 changes:
+1) window.initials ko balanced JSON parser se extract karta hai (regex nahi).
+2) initials JSON ke andar recursively saare strings scan karta hai.
+3) plaintext m3u8, escaped m3u8, aur encrypted hls h264/url/fallback sab handle karta hai.
+4) xHamster par yt-dlp -j still disabled hai, taaki KeyError(videoModel) wapas na aaye.
+
+Expected after deploy:
+🎯 Choose quality
+✅ xHamster custom engine active

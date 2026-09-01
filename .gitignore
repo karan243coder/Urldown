@@ -1,0 +1,27 @@
+# Secrets / local configuration
+.env
+*.session
+*.session-journal
+cookies*.txt
+!cookies.example.txt
+*.pem
+*.key
+service-account*.json
+
+# Runtime data
+DOWNLOADS/
+downloads/
+data/
+thumbnails/
+logs/
+*.aria2
+.aria2/
+
+# Python/editor
+__pycache__/
+*.py[cod]
+.venv/
+.pytest_cache/
+.idea/
+.vscode/
+.DS_Store

@@ -1,0 +1,112 @@
+═══════════════════════════════════════════════════════════════
+                    TERABOX INTEGRATION - CHANGES
+═══════════════════════════════════════════════════════════════
+
+📅 Date: 2026-07-06
+✨ Feature: Terabox Support Added
+
+═══════════════════════════════════════════════════════════════
+NEW FILES ADDED:
+═══════════════════════════════════════════════════════════════
+
+1. plugins/terabox_engine.py (15.4 KB)
+   - Custom Terabox extraction engine
+   - Handles all Terabox domains
+   - Extracts download URLs
+   - Authentication handling
+
+═══════════════════════════════════════════════════════════════
+MODIFIED FILES:
+═══════════════════════════════════════════════════════════════
+
+2. plugins/youtube_dl_echo.py
+   Changes:
+   - Added import: from plugins.terabox_engine import is_terabox, extract
+   - Added function: is_terabox(url)
+   - Added function: build_terabox_keyboard(tb_info)
+   - Added Terabox detection in echo() function (lines ~527-590)
+   - Terabox handling before yt-dlp command execution
+
+3. plugins/youtube_dl_button.py
+   Changes:
+   - Added function: terabox_call_back(bot, update)
+   - Handles Terabox downloads with progress
+   - Uploads to Telegram as Video/File/Audio
+   - ~250 lines of new code
+
+4. plugins/callback.py
+   Changes:
+   - Added import: terabox_call_back
+   - Added routing: if update.data.startswith("terabox=")
+   - Routes Terabox callbacks to handler
+
+═══════════════════════════════════════════════════════════════
+FEATURES ADDED:
+═══════════════════════════════════════════════════════════════
+
+✅ Terabox URL detection (all domains)
+✅ File info extraction (name, size, type)
+✅ Direct download URL extraction
+✅ Quality buttons (Video/File/Audio)
+✅ Progress tracking with speed & ETA
+✅ Beautiful progress bars
+✅ Custom thumbnail support
+✅ Log channel integration
+✅ Error handling
+✅ Fallback mechanisms
+
+═══════════════════════════════════════════════════════════════
+SUPPORTED TERABOX DOMAINS:
+═══════════════════════════════════════════════════════════════
+
+• terabox.com
+• teraboxapp.com
+• 1024tera.com
+• 4funbox.com
+• mirrobox.com
+• nephobox.com
+• momerybox.com
+• tibibox.com
+• terabox.app
+• teraboxshare.com
+
+═══════════════════════════════════════════════════════════════
+TESTING INSTRUCTIONS:
+═══════════════════════════════════════════════════════════════
+
+1. Deploy the updated bot
+2. Send a Terabox link like:
+   https://terabox.com/s/1AbCdEfGhIjKlMnOpQrStU
+
+3. Bot should show:
+   - File name
+   - File size
+   - Download options (Video/File/Audio)
+
+4. Click any option
+5. Watch the download progress
+6. File uploads to Telegram
+7. Success message appears
+
+═══════════════════════════════════════════════════════════════
+DEPENDENCIES:
+═══════════════════════════════════════════════════════════════
+
+No new dependencies required!
+All packages already in requirements.txt:
+✅ requests
+✅ beautifulsoup4
+✅ aiohttp
+
+═══════════════════════════════════════════════════════════════
+TOTAL CHANGES:
+═══════════════════════════════════════════════════════════════
+
+Files Added:    1
+Files Modified: 3
+Lines Added:    ~600+
+Lines Changed:  ~50
+
+═══════════════════════════════════════════════════════════════
+STATUS: ✅ READY FOR DEPLOYMENT
+═══════════════════════════════════════════════════════════════

@@ -1,0 +1,63 @@
+# BIMBO v4.0 - Requirements
+# -------------------------
+# Core Telegram
+pyrogram==2.0.106
+tgcrypto==1.2.5
+
+# HTTP
+aiohttp>=3.9.5
+aiofiles>=23.2.1
+requests>=2.32.0
+httpx>=0.27.0
+cloudscraper>=1.2.71
+# Browser TLS impersonation for anti-bot protected extractors
+curl-cffi>=0.15.0
+
+# Video / Media
+yt-dlp>=2026.7.4
+ffmpeg-python>=0.2.0
+Pillow>=10.4.0
+
+# Metadata
+hachoir==3.3.0
+
+libtorrent==2.0.11
+
+# Torrent (qBittorrent)
+qbittorrent-api>=2024.1.0
+
+# HTML / Parsing
+beautifulsoup4>=4.12.3
+lxml>=5.2.2
+
+# Timezone
+pytz>=2024.1
+
+# Database
+motor>=3.5.1
+pymongo>=4.8.0
+
+# System
+psutil>=6.0.0
+
+# Utils
+python-dotenv>=1.0.1
+schedule>=1.2.2
+
+# Web / Health
+flask>=3.0.3
+gunicorn>=22.0.0
+
+# Google Drive
+google-auth>=2.31.0
+google-auth-oauthlib>=1.2.1
+google-auth-httplib2>=0.2.0
+google-api-python-client>=2.137.0
+pydrive2>=1.19.0
+
+# Mega.nz
+mega.py==1.0.8
+
+# UI / misc
+rich>=13.7.1
+terabox-downloader>=1.8

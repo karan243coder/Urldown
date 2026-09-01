@@ -1,0 +1,70 @@
+============================================================
+  url-bot-v3  +  xHamster ka ALAG ENGINE  (naya)
+============================================================
+
+KYA NAYA HAI
+------------
+1) Ek alag file judi hai:  plugins/xhamster_engine.py
+   - Ye xHamster ka APNA engine hai (yt-dlp se azaad).
+   - SAARE xHamster domains/mirrors pehchaanta hai
+     (xhamster.com / .desi / .one / .tv, xhamster46.desi,
+      m.xhamster.com, xhday, xhvid, xhms.pro, xhopen, etc.)
+   - Khud page padhta hai, HLS (.m3u8) nikalta hai, h264+audio
+     wali har quality (144p..1080p) banata hai. videoModel
+     error / "Wrong key" / silent-av1 ki dikkat khatam.
+
+2) Bot ka flow:
+   - xHamster link aate hi PEHLE ye apna engine chalta hai
+     -> quality buttons (144p/240p/480p/720p/1080p) + MP3
+   - Button dabate hi bot us quality ka .m3u8 yt-dlp+ffmpeg se
+     download kar ke ek normal MP4 bana ke bhej deta hai.
+   - Agar engine kabhi fail ho -> bot APNE AAP yt-dlp pe
+     fallback kar leta hai (purana tarika). Koi crash nahi.
+
+3) BAAKI SAARI SITES bilkul pehle jaisi chalti hain.
+   YouTube/Insta/FB/etc. ka kuch nahi badla.
+
+
+KAUNSI FILES BADLI/JUDI (3)
+---------------------------
+- plugins/xhamster_engine.py     (NAYI file - xHamster engine)
+- plugins/youtube_dl_echo.py     (xHamster ko engine pe bheja)
+- plugins/youtube_dl_button.py   (engine ka m3u8 download)
+
+
+KAISE DEPLOY KARO
+-----------------
+Sabse aasan: poore zip ke files apne GitHub repo me daal do
+(replace) aur Koyeb/host pe Redeploy karo.
+
+Ya sirf upar wali 3 files replace/add karo:
+  - plugins/xhamster_engine.py   (NAYI -> add karo)
+  - plugins/youtube_dl_echo.py   (replace)
+  - plugins/youtube_dl_button.py (replace)
+
+
+ZAROORI (pehle se theek hai, bas check kar lo)
+----------------------------------------------
+- ffmpeg  : tere Dockerfile me  apt-get install -y ffmpeg  hai -> theek.
+            (HLS ko MP4 banane ke liye ffmpeg ZAROORI hai.)
+- yt-dlp  : requirements.txt me master pin hai -> theek.
+- requests: requirements.txt me pehle se hai -> theek
+            (engine isi se page fetch karta hai).
+
+
+TEST
+----
+- Bot ko koi xHamster link bhejo
+- Quality buttons aayenge -> 480p ya 240p choose karo
+- Video aa jaayega (AWAZ ke saath)
+
+
+HONEST BAAT
+-----------
+- Normal/public videos -> almost saare chalenge.
+- Premium / login-only / deleted / region-block -> nahi chalenge.
+- File size: Telegram BOT ka limit hai (free 50MB / premium 2GB).
+  720p/1080p bade ho sakte hain -> tab 480p/240p choose karna.
+- Agar "login required" jaisa aaye -> nayi cookies.txt daalni padegi.
+
+Koi error aaye to bot ka error/log bhej dena, theek kar denge.

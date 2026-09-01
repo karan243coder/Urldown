@@ -1,0 +1,16 @@
+XHAMSTER FIX v3
+
+Is v3 me main change:
+1) xHamster link par yt-dlp -j ab bilkul nahi chalega.
+   Agar custom engine fail hua to bot clear custom-engine error dega, yt-dlp ka KeyError(videoModel) nahi.
+2) Engine escaped/encoded m3u8 URLs bhi find karega.
+3) Koyeb logs me useful lines print hongi:
+   - xhamster custom engine OK
+   - xhamster: no m3u8 found ...
+   - xhamster custom engine FAILED
+
+Deploy ke baad expected message:
+🎯 Choose quality
+✅ xHamster custom engine active
+
+Agar ye nahi aaya, Koyeb logs me "xhamster:" wali lines bhejo.

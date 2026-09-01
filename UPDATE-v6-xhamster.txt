@@ -1,0 +1,17 @@
+XHAMSTER FIX v6 - stronger nested source finder
+
+Notes:
+- User original link hi bhej raha hai; chat/log display me adult URL sanitize/alter ho sakta hai.
+- Koyeb log: initials_parsed=True but m3u8_candidates=0.
+
+v6 engine changes:
+1) initials JSON ke andar recursively hls/source/h264/av1/url/fallback nodes scan karta hai.
+2) Nested encrypted HLS source ko yt-dlp decipher se decrypt try karta hai.
+3) Long hex / URL-with-hex cipher fallback added.
+4) top_keys debug log added.
+
+Replace in GitHub:
+plugins/xhamster_engine.py
+plugins/youtube_dl_echo.py
+
+Then Koyeb Redeploy.
